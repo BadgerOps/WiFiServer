@@ -74,7 +74,7 @@ class WifiAP():
         Writes configs to configfiles
         """
         config = configparser.RawConfigParser()
-        config.read(cfg_file)
+        config.read(cfg_path)
         config.set('default', )
 
     def set_logging(self):
