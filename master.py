@@ -4,13 +4,10 @@ import time
 import socket
 import logging
 from datetime import datetime
-
 import pytz
 
-from apscheduler.scheduler import Scheduler
-import graypy  # for logging to graylog
-import common  # our common files used in projects
-
+import common
+import OctoWifi
 
 class Master(object):
     '''Primary Application Daemon Object'''
@@ -22,22 +19,23 @@ class Master(object):
         self.set_cfg(cfg)
         self.set_env()
         self._shutdown = False
-        self.collectors = {}
-        self._workers = []
         self.ready = False
         socket.setdefaulttimeout(15)
-        self.sched = Scheduler()
         self.setup_logging()
-        #self.metrics = common.Metrics(namespace='$$.{}.$$.{}'.format(self.env, self.hostname))
-        #self.setup_default_metrics()
         self.jobs = common.Jobs(self)
         self._status = {'status': 'init',
                         'hostname': self.hostname,
                         'environment': self.env,
                         'threadstatus': {},
                         }
+        self.ap_list = {}
         self.setloglvl(self.cfg.logging['loglevel'])
         logging.info("Init Complete")
+
+
+    def get_ap_list(self):
+        ow = OctoWifi.OctoWifi()
+        self.ap_list = ow.list_networks()
 
     def set_cfg(self, cfg=None):
         '''Set the configuration based on passed in value or default to _cfg_filepath()
@@ -106,7 +104,7 @@ class Master(object):
             return int(n + n)
 
     def setup_logging(self):
-        '''Setup Logging, assuming we're logging to graylog using graypy'''
+        '''Setup Logging'''
         if self.env == "production":
             facilityname = "ApplicationName"
         else:
@@ -116,8 +114,9 @@ class Master(object):
         logformat = logging.Formatter(fmt='%(asctime)s [%(levelname)s] (%(threadName)-10s) %(message)s',
                                       datefmt='%Y-%m-%d %H:%M:%S')
         log.setLevel('INFO')
-        if self.cfg.graypy['enable']:
-            handler = graypy.GELFHandler(self.cfg.graypy['host'], int(self.cfg.graypy['port']))
+        if self.cfg.logging['enable']:
+            # set your handler below
+            handler = logging.basicConfig()
             handler.setFormatter(logformat)
             log.addHandler(handler)
         else:
@@ -179,6 +178,7 @@ class Master(object):
                     time.sleep(15)
                     self.set_threadstatus("MAIN", "LOOP")
                     ## do stuff
+                    self.get_ap_list()
                 except KeyboardInterrupt:
                     self.keyboardinterrupt()
             self.set_threadstatus("MAIN", "CLEANUP")

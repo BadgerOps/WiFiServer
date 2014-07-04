@@ -43,6 +43,10 @@ class WS(threading.Thread):
             logging.info("Shutdown Called from WS")
             self.main.shutdown = True
 
+        @get('/list')
+        def ap_list():
+            return self.main.ap_list
+
         while True:
             try:
                 run(host='0.0.0.0', port=int(self.main.cfg.ws['port']), quiet=True)

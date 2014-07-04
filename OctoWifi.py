@@ -18,15 +18,16 @@ class OctoWifi(object):
     def __init__(self):
         self.networks = []
         self._setup()
-        self.gpio_pin = 26
+        #self.gpio_pin = 26
 
     def _setup(self):
-        gpio.setmode(gpio.BOARD)
-        gpio.setup(self.gpio_pin, gpio.IN, pull_up_down=gpio.PUD_UP)
+        pass
+        # gpio.setmode(gpio.BOARD)
+        # gpio.setup(self.gpio_pin, gpio.IN, pull_up_down=gpio.PUD_UP)
 
     def get_networks(self):
         '''get a list of networks...'''
-        interface = 'wlan0'
+        interface = 'wlan0'  #FIXME:  shouldn't be hardcoded
         return Cell.all(interface)
 
     def dict_networks(self, network_list):
@@ -52,7 +53,7 @@ class OctoWifi(object):
     def run(self):
         while True:
             print self.list_networks()
-            print self.gpio_stuff()
+            #print self.gpio_stuff()
             time.sleep(10)
 
     def gpio_check(self):
