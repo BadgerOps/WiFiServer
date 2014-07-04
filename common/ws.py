@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 # pylint: disable=W0611,W0612,R0912
 
 
@@ -30,7 +31,7 @@ class WS(threading.Thread):
 
         @route('/nagios')
         def nagios():
-            status = {"status_code": 0, "status_msg": "OK (static)"} # fixme
+            status = {"status_code": 0, "status_msg": "OK (static)"}  # fixme
             return jsondump(status)
 
         @get('/status')

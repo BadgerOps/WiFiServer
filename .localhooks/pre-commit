@@ -1,0 +1,176 @@
+#!/usr/bin/env python
+
+import os
+import re
+import subprocess
+import sys
+
+
+cfg = {'pep8': {},
+       'pylint': {'limit': 9.0,
+                  'params': """--max-line-length=120 --good-names=e -d W0703,W0621,C0103,C0111,W0403,R0201,R0903,R0913,R0902,I0011"""},
+       'ignorefiles': ['.*hooks.*'],
+       }
+
+
+def precommit():
+    exitcode = 0
+    branch = get_branch()
+    changedfiles = get_changed_files()
+    print "Running Pre-Commit checks on Branch: {0}".format(branch)
+    if branch == 'production':
+        print "FAILED:"
+        print "Looks like you're trying to commit to production, you shouldn't do that."
+        sys.exit(1)
+    else:
+        pythonfiles = get_python_files(changedfiles)
+        pylint_status = pylint(pythonfiles)
+        pep8_status = pep8(pythonfiles)
+    if pylint_status != 0:
+        print "PYLINT FAILED: you'll want to clean up your code a bit"
+        exitcode = 1
+    if pep8_status != 0:
+        print "PEP8 FAILED: you'll want to clean up your code a bit"
+        exitcode = 1
+    sys.exit(exitcode)
+
+
+def get_branch():
+    branches = []
+    p = subprocess.Popen(['git', 'branch'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+        if "*" in line:
+            branch = line.split(' ')[1]
+            branches.append(branch)
+        else:
+            branches.append(line.strip())
+    return branch
+
+
+def get_changed_files():
+    files = []
+    modified = re.compile(r"""^(?:M|A)(\s+)(?P<name>.*)""")
+    p = subprocess.Popen(['git', 'status', '--porcelain'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+        match = modified.match(line)
+        if match:
+            files.append(match.group('name'))
+    return files
+
+
+def stash():
+    subprocess.call(['git', 'stash', '-u', '--keep-index'], stdout=subprocess.PIPE)
+
+
+def unstash():
+    subprocess.call(['git', 'reset', '--hard'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.call(['git', 'stash', 'pop', '--quiet', '--index'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def matches_file(filename, match_files):
+    return any(re.compile(match_file).match(filename) for match_file in match_files)
+
+
+def pylint(python_files):
+    status_code = 0
+    pylintfiles = []
+    if len(python_files) == 0:
+        return 0
+    for filename in python_files:
+        # Check the first line for a python shebang
+        try:
+            with open(filename, 'r') as file_handle:
+                first_line = file_handle.readline()
+            if 'python' in first_line and '#!' in first_line:
+                pylintfiles.append((filename, None))
+        except IOError:
+            print 'File not found (probably deleted): %s\t\tSKIPPED' % filename
+
+    # Pylint Python files
+    i = 1
+    regexp = re.compile(r'^Your\ code\ has\ been\ rated\ at\ (\-?[0-9\.]+)/10')
+    for python_file, score in pylintfiles:
+        # Allow __init__.py files to be completely empty
+        if os.path.basename(python_file) == '__init__.py':
+            if os.stat(python_file).st_size == 0:
+                print 'Skipping pylint on %s (empty __init__.py)..\tSKIPPED' % (
+                    python_file)
+
+                # Bump parsed files
+                i += 1
+                continue
+
+        # Set the initial score
+        score = 0.00
+
+        # Start pylinting
+        sys.stdout.write("Running pylint on %s (file %i/%i)..\t" % (
+            python_file, i, len(pylintfiles)))
+        sys.stdout.flush()
+        try:
+            command = 'pylint %s %s' % (cfg['pylint']['params'], python_file)
+            proc = subprocess.Popen(
+                command.split(),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+            out, _ = proc.communicate()
+        except OSError:
+            print "\nAn error occurred. Is pylint installed?"
+            sys.exit(1)
+
+        # Check for the result
+        # pylint: disable=E1103
+        for line in out.split('\n'):
+            match = re.match(regexp, line)
+            if match:
+                score = float(match.group(1))
+
+        # Verify the score
+        if score >= float(cfg['pylint']['limit']):
+            status = 'PASSED'
+        else:
+            status = 'FAILED'
+            status_code = 1
+
+        # Add some output
+        print '%.2f/10.00\t%s' % (score, status)
+
+        # Bump parsed files
+        i += 1
+
+    return status_code
+
+
+def get_python_files(files):
+    python_files = []
+    status_code = 0
+    for filename in files:
+        if filename[-3:] == '.py':
+            if not matches_file(filename, cfg['ignorefiles']):
+                python_files.append(filename)
+    return python_files
+
+
+def pep8(python_files):
+    if len(python_files) == 0:
+        return 0
+    status_code = 0
+    for filename in python_files:
+
+        process = subprocess.Popen("""pep8 -r --max-line-length=120 --ignore=W293 %s  --exclude='*/docs*' """ % filename,
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        out, err = process.communicate()
+        if out or err:
+            prefix = '\t%s:' % filename
+            output_lines = ['%s%s' % (prefix, line) for line in out.splitlines()]
+            print '\n'.join(output_lines)
+            if err:
+                print err
+            status_code = 1
+    return status_code
+
+
+if __name__ == "__main__":
+    precommit()

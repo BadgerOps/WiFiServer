@@ -1,0 +1,18 @@
+*.pyc
+.idea/*
+# don't need to commit any cache files or compiled files either
+*.cache
+*.pyc
+# other files, we don't need
+*~
+.directory
+*.wpr
+*.wpu
+*.bak
+.tox
+build
+dist
+MANIFEST
+_build
+*.egg-info
+.coverage
