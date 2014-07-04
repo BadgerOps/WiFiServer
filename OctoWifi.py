@@ -45,10 +45,10 @@ class OctoWifi(object):
 
     def list_networks(self):
         if len(self.networks) > 0:
-            return self.networks
+            return self.dict_networks(self.networks)
         else:
             self.networks = self.get_networks()
-            return self.networks
+            return self.dict_networks(self.networks)
 
     def run(self):
         while True:
