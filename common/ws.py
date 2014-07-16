@@ -29,11 +29,6 @@ class WS(threading.Thread):
         def index():
             return "generic application - WS"
 
-        @route('/nagios')
-        def nagios():
-            status = {"status_code": 0, "status_msg": "OK (static)"}  # fixme
-            return jsondump(status)
-
         @get('/status')
         def status():
             return jsondump(self.main._status)
@@ -46,6 +41,10 @@ class WS(threading.Thread):
         @get('/list')
         def ap_list():
             return self.main.ap_list
+
+        @get('/setup')
+        def setup():
+          return 'not implemented yet'
 
         while True:
             try:

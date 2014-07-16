@@ -3,3 +3,5 @@ from common.jobs import Jobs
 from common.settings import Settings
 from common.shellcmds import Command
 from common.ws import WS
+from wifiap import WiFiAP
+from wificlient import WiFiClient

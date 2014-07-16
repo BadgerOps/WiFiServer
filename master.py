@@ -161,8 +161,8 @@ class Master(object):
 
     def setup_ap(self):
       """set up AP mode"""
-      wap = wifiap.WifiAP(start)
-      return 
+      wap = wifiap.WifiAP('start')
+      return
 
     def set_threadstatus(self, thread, status):
         if not thread in self._status['threadstatus'].keys():
