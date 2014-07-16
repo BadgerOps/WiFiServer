@@ -7,8 +7,7 @@ from datetime import datetime
 import pytz
 
 import common
-import OctoWifi
-import wifiap
+
 
 class Master(object):
     '''Primary Application Daemon Object'''
@@ -32,11 +31,6 @@ class Master(object):
         self.ap_list = {}
         self.setloglvl(self.cfg.logging['loglevel'])
         logging.info("Init Complete")
-
-
-    def get_ap_list(self):
-        ow = OctoWifi.OctoWifi()
-        self.ap_list = ow.list_networks()
 
     def set_cfg(self, cfg=None):
         '''Set the configuration based on passed in value or default to _cfg_filepath()
@@ -158,11 +152,6 @@ class Master(object):
         ws = common.WS(self)
         ws.setDaemon(True)
         ws.start()
-
-    def setup_ap(self):
-      """set up AP mode"""
-      wap = wifiap.WifiAP('start')
-      return
 
     def set_threadstatus(self, thread, status):
         if not thread in self._status['threadstatus'].keys():
