@@ -8,6 +8,7 @@ import pytz
 
 import common
 import OctoWifi
+import wifiap
 
 class Master(object):
     '''Primary Application Daemon Object'''
@@ -157,6 +158,11 @@ class Master(object):
         ws = common.WS(self)
         ws.setDaemon(True)
         ws.start()
+
+    def setup_ap(self):
+      """set up AP mode"""
+      wap = wifiap.WifiAP(start)
+      return 
 
     def set_threadstatus(self, thread, status):
         if not thread in self._status['threadstatus'].keys():
