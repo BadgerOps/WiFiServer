@@ -12,11 +12,8 @@ class WiFiAP():
     Allows creation of WiFi AP on compatible wireless cards
     Requires hostapd and dnsmasq
     """
-    def __init__(self, arg):
-        if arg == 'start':
-            self.start_ap()
-        elif arg == 'stop':
-            self.stop_all()
+    def __init__(self):
+      pass
 
     def start_ap(self):
         """
@@ -28,7 +25,6 @@ class WiFiAP():
             os.system('sudo ifconfig wlan0 10.15.0.1/24 up')
         except Exception as e:
             logging.warning('Unable to prepare interface: {}'.format(e))
-        sleep(2)
         self.start_dhcp()
         try:
             os.system('sudo service hostapd start')
@@ -50,13 +46,12 @@ class WiFiAP():
         """
         try:
             os.system('sudo service hostapd stop')
-            os.system('sudo service dnsmasq stop')
         except Exception as e:
             logging.warning('Unable to stop services: {}'.format(e))
         else:
             os.system('sudo nmcli nm wifi on')
 
-    def build_config(self, cfg):
+    def build_config(self, cfg):  # todo: cfg shouldn't be per module
         """
         Sets configuration for hostapd & dnsmasq
         """
@@ -69,7 +64,7 @@ class WiFiAP():
 
         return cfg_path
 
-    def write_config(self, cfg_path):
+    def write_config(self, cfg_path):  # todo: I'm thinking a config object
         """
         Writes configs to configfiles
         """
@@ -77,7 +72,7 @@ class WiFiAP():
         config.read(cfg_path)
         config.set('default', )
 
-    def set_logging(self):
+    def set_logging(self):  # todo: logging should be set by master, location from cfg
         """
         Enables logging
         """
