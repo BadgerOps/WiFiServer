@@ -61,6 +61,7 @@ class WiFiAP():
         logging.basicConfig(filename='/var/log/wifiap.log', level=logging.DEBUG)
 
 if __name__ == "__main__":
-    WiFiAP.start_ap()
+    a = WiFiAP()
+    a.start_ap()
     sleep(60)
-    WiFiAP.stop_all()
+    a.stop_all()
