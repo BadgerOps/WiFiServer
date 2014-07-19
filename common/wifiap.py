@@ -14,7 +14,8 @@ class WiFiAP():
     Requires hostapd and dnsmasq
     """
     def __init__(self):
-      self.set_logging()
+        self.set_logging()
+        self.managedhcp = ManageDHCP()
 
     def start_ap(self):
         """
@@ -26,7 +27,7 @@ class WiFiAP():
             os.system('sudo ifconfig wlan0 10.15.0.1/24 up')
         except Exception as e:
             logging.warning('Unable to prepare interface: {}'.format(e))
-        ManageDHCP.start()
+        self.managedhcp.start()
         try:
             os.system('sudo service hostapd start')
         except Exception as e:
@@ -47,7 +48,7 @@ class WiFiAP():
         """
         try:
             os.system('sudo service hostapd stop')
-            ManageDHCP.stop()
+            self.managedhcp.stop()
         except Exception as e:
             logging.warning('Unable to stop services: {}'.format(e))
         else:
