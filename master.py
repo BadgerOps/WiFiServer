@@ -1,20 +1,23 @@
 import os
 import sys
 import time
+import pytz
 import socket
 import logging
-from datetime import datetime
-import pytz
-
 import common
+from datetime import datetime
+from common import WiFiObj, SVC
 
 
 class Master(object):
-    '''Primary Application Daemon Object'''
+    """
+    Master process for WiFi Server application
+    """
     def __init__(self, cfg=None):
-        '''Initialize the Application Master Object'''
         self.hostname = socket.gethostname()
-        self.cfg = None
+        self.svc = SVC()
+        WiFiObj.svc = self.svc
+        self.svc.cfg = None
         self.env = None
         self.set_cfg(cfg)
         self.set_env()
@@ -29,7 +32,7 @@ class Master(object):
                         'threadstatus': {},
                         }
         self.ap_list = {}
-        self.setloglvl(self.cfg.logging['loglevel'])
+        self.setloglvl(self.svc.cfg.logging['loglevel'])
         logging.info("Init Complete")
 
     def set_cfg(self, cfg=None):
@@ -39,9 +42,9 @@ class Master(object):
         :type cfg: dict
         '''
         if cfg is not None:
-            self.cfg = cfg
+            self.svc.cfg = cfg
         else:
-            self.cfg = common.Settings(self._cfg_filepath())
+            self.svc.cfg = common.Settings(self._cfg_filepath())
         return cfg  # for testing
 
     def _cfg_filepath(self):
@@ -109,7 +112,7 @@ class Master(object):
         logformat = logging.Formatter(fmt='%(asctime)s [%(levelname)s] (%(threadName)-10s) %(message)s',
                                       datefmt='%Y-%m-%d %H:%M:%S')
         log.setLevel('INFO')
-        if self.cfg.logging['enable']:
+        if self.svc.cfg.logging['enable']:
             # set your handler below
             handler = logging.basicConfig()
             handler.setFormatter(logformat)

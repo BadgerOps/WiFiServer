@@ -5,4 +5,5 @@ from common.shellcmds import Command
 from common.ws import WS
 from wifiap import WiFiAP
 from managedhcp import ManageDHCP
+from svc import WiFiObj, SVC
 from wificlient import WiFiClient

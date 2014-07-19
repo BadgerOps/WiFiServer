@@ -1,4 +1,5 @@
 import logging
+from wifiap import WiFiAP
 
 
 class WiFiObj(object):
@@ -15,3 +16,4 @@ class SVC(object):
     def __init__(self):
         self.cfg = None
         self.apmode = True
+        self.ap = WiFiAP()
