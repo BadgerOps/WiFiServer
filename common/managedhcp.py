@@ -3,7 +3,7 @@ import os
 import sys
 
 
-class ManageDNS(object):
+class ManageDHCP(object):
     def __init__(self):
         pass
 

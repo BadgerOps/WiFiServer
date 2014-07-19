@@ -4,5 +4,5 @@ from common.settings import Settings
 from common.shellcmds import Command
 from common.ws import WS
 from wifiap import WiFiAP
-from managedns import ManageDNS
+from managedhcp import ManageDHCP
 from wificlient import WiFiClient

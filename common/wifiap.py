@@ -4,6 +4,7 @@ import logging
 import os
 import sys
 import configparser
+from managedhcp import ManageDHCP
 from time import sleep
 
 
@@ -13,7 +14,7 @@ class WiFiAP():
     Requires hostapd and dnsmasq
     """
     def __init__(self):
-      pass
+      self.set_logging()
 
     def start_ap(self):
         """
@@ -25,7 +26,7 @@ class WiFiAP():
             os.system('sudo ifconfig wlan0 10.15.0.1/24 up')
         except Exception as e:
             logging.warning('Unable to prepare interface: {}'.format(e))
-        self.start_dhcp()
+        ManageDHCP.start()
         try:
             os.system('sudo service hostapd start')
         except Exception as e:
@@ -46,38 +47,19 @@ class WiFiAP():
         """
         try:
             os.system('sudo service hostapd stop')
+            ManageDHCP.stop()
         except Exception as e:
             logging.warning('Unable to stop services: {}'.format(e))
         else:
             os.system('sudo nmcli nm wifi on')
 
-    def build_config(self, cfg):  # todo: cfg shouldn't be per module
-        """
-        Sets configuration for hostapd & dnsmasq
-        """
-        if cfg == 'hostapd':
-            cfg_path = '/etc/hostapd/hostapd.conf'
-        elif cfg == 'dnsmasq':
-            cfg_path = '/etc/dnsmasq.conf'
-        else:
-            logging.warning('Unknown cfg type: {}'.format(cfg))
-
-        return cfg_path
-
-    def write_config(self, cfg_path):  # todo: I'm thinking a config object
-        """
-        Writes configs to configfiles
-        """
-        config = configparser.RawConfigParser()
-        config.read(cfg_path)
-        config.set('default', )
-
     def set_logging(self):  # todo: logging should be set by master, location from cfg
         """
         Enables logging
         """
-        logging.basicConfig(filename='/var/log/pifi.log', level=logging.DEBUG)
+        logging.basicConfig(filename='/var/log/wifiap.log', level=logging.DEBUG)
 
 if __name__ == "__main__":
-    arg = sys.argv[1]
-    WifiAP(arg)
+    WiFiAP.start_ap()
+    sleep(60)
+    WiFiAP.stop_all()
