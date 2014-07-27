@@ -7,6 +7,7 @@ import logging
 import common
 from datetime import datetime
 from common import WiFiObj, SVC
+from common.wifiap import WiFiAP
 
 
 class Master(object):
@@ -17,10 +18,11 @@ class Master(object):
         self.hostname = socket.gethostname()
         self.svc = SVC()
         WiFiObj.svc = self.svc
+        self.svc.master = self
+        self.svc.wifiap = WiFiAP()
         self.svc.cfg = None
         self.env = None
         self.set_cfg(cfg)
-        self.set_env()
         self._shutdown = False
         self.ready = False
         socket.setdefaulttimeout(15)
@@ -34,6 +36,7 @@ class Master(object):
         self.ap_list = {}
         self.setloglvl(self.svc.cfg.logging['loglevel'])
         logging.info("Init Complete")
+        self.start()
 
     def set_cfg(self, cfg=None):
         '''Set the configuration based on passed in value or default to _cfg_filepath()
@@ -62,7 +65,30 @@ class Master(object):
 
     @property
     def shutdown(self):
-        '''Shutdown property, when true, threads will start exiting.'''
+        '''Shutdown property, when true, threads will stardef main_loop(self):
+        self.ready = True
+        try:
+            logging.info("Main Thread Stable (startup complete)")
+            self.initial_tasks()
+            while self.shutdown is not True:
+                try:
+                    time.sleep(15)
+                    self.set_threadstatus("MAIN", "LOOP")
+                    ## do stuff
+                    self.get_ap_list()
+                    while self.svc.apmode:
+                        self.svc.ap.run()
+                except KeyboardInterrupt:
+                    self.keyboardinterrupt()
+            self.set_threadstatus("MAIN", "CLEANUP")
+            self._status['status'] = 'cleanup'
+            logging.info("Begin Shutdown Sequeuence")
+            self.cleanup()
+            logging.info("System Database Shutdown")
+        except Exception as e:
+            logging.critical("Error in Main loop: {0}".format(e))
+        finally:
+            exit()t exiting.'''
         return self._shutdown
 
     @shutdown.setter
@@ -76,30 +102,42 @@ class Master(object):
         if please is True:
             self._shutdown = True
             logging.info("Initiating Shutdown")
-        return self._shutdown
 
     def start(self):
         '''Start everything'''
         logging.info("Startup")
         self.start_ws()
-        self.schedule_tasks()
         self._status['status'] = 'running'
         self.main_loop()
+
+    def main_loop(self):
+        self.ready = True
+        try:
+            logging.info("Main Thread Stable (startup complete)")
+            self.initial_tasks()
+            while self.shutdown is not True:
+                try:
+                    time.sleep(15)
+                    self.set_threadstatus("MAIN", "LOOP")
+                    ## do stuff
+                    self.get_ap_list()
+                    while self.svc.apmode:
+                        self.svc.wifiap.run()
+                except KeyboardInterrupt:
+                    self.keyboardinterrupt()
+            self.set_threadstatus("MAIN", "CLEANUP")
+            self._status['status'] = 'cleanup'
+            logging.info("Begin Shutdown Sequeuence")
+            self.cleanup()
+            logging.info("System Database Shutdown")
+        except Exception as e:
+            logging.critical("Error in Main loop: {0}".format(e))
+        finally:
+            exit()
 
     def initial_tasks(self):
         '''Runs a few jobs immediately upon startup'''
         pass
-
-    def schedule_tasks(self):
-        '''Schedule routine tasks'''
-        #self.sched.add_interval_job(self.jobs.a_job(), minutes=self.splay_tasks(1))
-        #self.sched.start()
-
-    def splay_tasks(self, n):
-        if self.env == 'production':
-            return n
-        else:
-            return int(n + n)
 
     def setup_logging(self):
         '''Setup Logging'''
@@ -135,16 +173,6 @@ class Master(object):
         elif loglevel == 'DEBUG':
             logging.root.setLevel(logging.DEBUG)
 
-    def set_env(self, override=None):
-        '''Set Environment'''
-        if override is not None:
-            self.env = override
-        elif 'sysctl' in self.hostname:
-            self.env = 'production'
-        else:
-            self.env = 'dev'
-        return self.env  # for testing
-
     def status(self):
         """Make a copy of status dict and return it"""
         currentstatus = self._status.copy()
@@ -165,29 +193,6 @@ class Master(object):
 
     def cleanup(self):
         logging.info("Entering Cleanup")
-
-    def main_loop(self):
-        self.ready = True
-        try:
-            logging.info("Main Thread Stable (startup complete)")
-            self.initial_tasks()
-            while self.shutdown is not True:
-                try:
-                    time.sleep(15)
-                    self.set_threadstatus("MAIN", "LOOP")
-                    ## do stuff
-                    self.get_ap_list()
-                except KeyboardInterrupt:
-                    self.keyboardinterrupt()
-            self.set_threadstatus("MAIN", "CLEANUP")
-            self._status['status'] = 'cleanup'
-            logging.info("Begin Shutdown Sequeuence")
-            self.cleanup()
-            logging.info("System Database Shutdown")
-        except Exception as e:
-            logging.critical("Error in Main loop: {0}".format(e))
-        finally:
-            exit()
 
     def keyboardinterrupt(self):
         self.shutdown = True

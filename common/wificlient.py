@@ -10,14 +10,17 @@ import configparser
 from time import sleep
 try:
     import RPi.GPIO as gpio
+except RuntimeError:
+    print "Must be run on a raspberry pi"
 except Exception:
     print 'cannot import the RPi.GPIO lib, is it installed?'
+
 
 class WifiClient(object):
 
     def __init__(self):
         self.networks = []
-        self._setup()
+        #self._setup()
         #self.gpio_pin = 26
 
     def _setup(self):
