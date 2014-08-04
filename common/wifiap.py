@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
-import logging
 import os
-import sys
-import configparser
+import logging
 from svc import WiFiObj
 from time import sleep
 from managedhcp import ManageDHCP
