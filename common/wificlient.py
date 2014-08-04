@@ -19,13 +19,23 @@ class WifiClient(object):
     def _setup(self):
         pass
 
+    @property
+    def scan(self):
+        '''
+        wrapper for the web restful endpoint
+        :rtype : dictionary
+        '''
+        return self.dict_networks(self.get_networks())
+
     def get_networks(self):
         '''get a list of networks...'''
         interface = 'wlan0'  #FIXME:  shouldn't be hardcoded
         return Cell.all(interface)
 
     def dict_networks(self, network_list):
-        '''build a dictionary object out of network information'''
+        '''build a dictionary object out of network information
+        :rtype : dictionary
+        '''
         ap = {}
         nw = {}
         for item in network_list:

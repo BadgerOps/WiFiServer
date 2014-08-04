@@ -13,6 +13,7 @@ from common import jsondump
 
 
 class WS(threading.Thread):
+
     def __init__(self, main):
         self.main = main
         threading.Thread.__init__(self)
@@ -41,6 +42,10 @@ class WS(threading.Thread):
         @get('/list')
         def ap_list():
             return self.main.ap_list
+
+        @get('/scan')
+        def ap_scan():
+            return self.main.svc.scan
 
         @get('/setup')
         def setup():

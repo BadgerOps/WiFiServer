@@ -15,3 +15,6 @@ class SVC(object):
     def __init__(self):
         self.cfg = None
         self.apmode = True
+
+    def scan(self):
+        return
