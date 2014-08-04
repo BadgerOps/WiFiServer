@@ -18,21 +18,20 @@ class WiFiAP(WiFiObj):
         self.dhcp = ManageDHCP()
 
     def run(self):
-        while self.svc.apmode:
-            logging.info("Starting WiFi AP")
-            try:
-                self.startap()
-            except Exception as e:
-                logging.critical("Unable to start WiFi AP: {}".format(e))
-        logging.info("Shutting down WiFi AP")
-        try:
-            self.stopap()
-        except Exception as e:
-            logging.warn("Unable to stop WiFi AP: {}".format(e))
+        while self.svc.apmode is True:
+            self.startap()
+        self.stopap()
 
     def startap(self):
-        pass
+        logging.info("Starting WiFi AP")
+        try:
+            something
+        except Exception as e:
+            logging.warn("exceptiony stuff")
 
     def stopap(self):
-        pass
-
+        logging.info("Stopping WiFi AP")
+        try:
+            something
+        except Exception as e:
+            logging.warn("agh!")
