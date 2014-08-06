@@ -2,8 +2,8 @@
 
 import os
 import logging
-from svc import WiFiObj
-from time import sleep
+
+from common.svc import WiFiObj
 from managedhcp import ManageDHCP
 
 

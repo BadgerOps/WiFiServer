@@ -1,11 +1,13 @@
 import os
 import sys
 import time
-import pytz
 import socket
 import logging
-import common
 from datetime import datetime
+
+import pytz
+
+import common
 from common import WiFiObj, SVC
 from common.wifiap import WiFiAP
 
