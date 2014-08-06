@@ -42,7 +42,7 @@ class WifiClient(object):
             nw['encrypted'] = item.encrypted
             nw['encryption'] = item.encryption_type
             nw['mac_addr'] = item.address
-            ap[nw['network']] = nw
+            ap[nw['network']] = nw  # build a dictionary with the ssid as the key
         return ap
 
     def list_networks(self):

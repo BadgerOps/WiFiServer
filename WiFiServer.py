@@ -27,7 +27,7 @@ class WiFiServer(object):
         self.main()
 
     def get_networks(self):
-        wificlient = common.WifiClient
+        wificlient = common.WifiClient()
         self.networks = wificlient.scan()
 
     def main(self):
