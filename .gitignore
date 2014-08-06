@@ -5,14 +5,15 @@
 *.pyc
 # other files, we don't need
 *~
-.directory
+*.directory
 *.wpr
 *.wpu
 *.bak
-.tox
+*.tox
 build
 dist
 MANIFEST
 _build
 *.egg-info
-.coverage
+*.coverage
+
