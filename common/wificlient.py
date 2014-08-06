@@ -15,6 +15,7 @@ class WifiClient(object):
     def __init__(self):
         self.networks = []
         #self._setup()
+        self.interface = 'en1'  # TODO: move this to cfg
 
     def _setup(self):
         pass
@@ -29,8 +30,7 @@ class WifiClient(object):
 
     def get_networks(self):
         '''get a list of networks...'''
-        interface = 'wlan0'  #FIXME:  shouldn't be hardcoded
-        return Cell.all(interface)
+        return Cell.all(self.interface)
 
     def dict_networks(self, network_list):
         '''build a dictionary object out of network information
@@ -52,3 +52,7 @@ class WifiClient(object):
         else:
             self.networks = self.get_networks()
             return self.dict_networks(self.networks)
+
+if __name__ == "__main__":
+    wc = WifiClient()
+    print wc.list_networks()
