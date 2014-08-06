@@ -15,7 +15,7 @@ class WifiClient(object):
     def __init__(self):
         self.networks = []
         #self._setup()
-        self.interface = 'en1'  # TODO: move this to cfg
+        self.interface = 'wlan0'  # TODO: move this to cfg
 
     def _setup(self):
         pass
@@ -43,7 +43,7 @@ class WifiClient(object):
             nw['encrypted'] = item.encrypted
             nw['encryption'] = item.encryption_type
             nw['mac_addr'] = item.address
-            ap['network'] = nw
+            ap[nw['network']] = nw
         return ap
 
     def list_networks(self):
@@ -52,7 +52,3 @@ class WifiClient(object):
         else:
             self.networks = self.get_networks()
             return self.dict_networks(self.networks)
-
-if __name__ == "__main__":
-    wc = WifiClient()
-    print wc.list_networks()

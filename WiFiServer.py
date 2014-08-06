@@ -4,12 +4,14 @@ import logging
 import sys
 import time
 from datetime import datetime
+import common
 
 class WiFiServer(object):
 
     def __init__(self, cfg=None):
         self.setup_logging()
         self.shutdown = False
+        self.networks = []
 
 
     def setup_logging(self):
@@ -24,6 +26,10 @@ class WiFiServer(object):
     def start(self):
         self.main()
 
+    def get_networks(self):
+        wificlient = common.WifiClient
+        self.networks = wificlient.scan
+
     def main(self):
         """main thread"""
         try:
@@ -32,7 +38,9 @@ class WiFiServer(object):
                 try:
                     time.sleep(15)
                     logging.debug('in the main loop')
-                    print "main loop"
+                    print 'performing network scan'
+                    self.get_networks()
+                    print self.networks
                     #self.set_threadstatus("MAIN", "LOOP")
                     ## do stuff
                 except KeyboardInterrupt:
