@@ -20,7 +20,6 @@ class WifiClient(object):
     def _setup(self):
         pass
 
-    @property
     def scan(self):
         '''
         wrapper for the web restful endpoint
