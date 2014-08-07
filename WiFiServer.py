@@ -6,13 +6,15 @@ import time
 from datetime import datetime
 import common
 
-class WiFiServer(object):
 
+class WiFiServer(object):
+    """
+    Master process for WiFi service
+    """
     def __init__(self, cfg=None):
         self.setup_logging()
         self.shutdown = False
         self.networks = []
-
 
     def setup_logging(self):
         """Setup Logging"""
@@ -34,11 +36,11 @@ class WiFiServer(object):
         """main thread"""
         try:
             logging.info("Main Thread Stable (startup complete)")
-            while self.shutdown == False:
+            while self.shutdown is False:
                 try:
                     time.sleep(15)
-                    logging.debug('in the main loop')
-                    print 'performing network scan'
+                    logging.debug('Main loop')
+                    print 'Performing Network Scan'
                     self.get_networks()
                     print self.networks
                     #self.set_threadstatus("MAIN", "LOOP")
