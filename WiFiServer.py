@@ -12,6 +12,9 @@ class WiFiServer(object):
     Master process for WiFi service
     """
     def __init__(self, cfg=None):
+        self.svc = common.SVC()
+        common.WiFiObj.svc = self.svc
+        self.ap = common.WiFiAP()
         self.setup_logging()
         self.shutdown = False
         self.networks = []
@@ -43,6 +46,11 @@ class WiFiServer(object):
                     print 'Performing Network Scan'
                     self.get_networks()
                     print self.networks
+                    if self.svc.apmode:
+                        if not self.svc.ap_active:
+                            self.ap.startap()
+                        else:
+                            logging.debug("WiFi AP already active")
                     #self.set_threadstatus("MAIN", "LOOP")
                     ## do stuff
                 except KeyboardInterrupt:
