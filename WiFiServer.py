@@ -23,17 +23,6 @@ class WiFiServer(object):
         logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
         logging.StreamHandler(sys.stdout)
 
-    def keyboardinterrupt(self):
-        self.shutdown = True
-        logging.info("KeyboardInterrupt Called, Shutting down application")
-
-    def start(self):
-        self.main()
-
-    def start_ws(self):
-        """start the webservice"""
-        pass
-
     def start_ap(self):
         """star the ap if we're in ap mode"""
         if self.svc.apmode:
@@ -60,6 +49,20 @@ class WiFiServer(object):
 
     def cleanup(self):
         pass
+
+    def start_ws(self):
+        """Start the web service"""
+        ws = common.WS(self)
+        ws.setDaemon(True)
+        ws.start()
+
+    def keyboardinterrupt(self):
+        self.shutdown = True
+        logging.info("KeyboardInterrupt Called, Shutting down application")
+
+    def start(self):
+        self.start_ws()
+        self.main()
 
     def main(self):
         """main thread"""
