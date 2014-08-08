@@ -16,6 +16,7 @@ class SVC(object):
         self.cfg = None
         self.apmode = True
         self.ap_active = False
+        self.client_mode = False
 
     def scan(self):
         return

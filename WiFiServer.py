@@ -3,7 +3,6 @@
 import logging
 import sys
 import time
-from datetime import datetime
 import common
 
 
@@ -31,9 +30,30 @@ class WiFiServer(object):
     def start(self):
         self.main()
 
+    def start_ws(self):
+        """start the webservice"""
+        pass
+
+    def start_ap(self):
+        """star the ap if we're in ap mode"""
+        if self.svc.apmode:
+            logging.info("starting AP")
+            if not self.svc.ap_active:
+                self.ap.startap()
+            else:
+                logging.debug("WiFi AP already active")
+        else:
+            logging.info("this shouldn't get hit, no reason to start the AP")
+
+    def stop_ap(self):
+        """stop the AP"""
+
     def get_networks(self):
         wificlient = common.WifiClient()
         self.networks = wificlient.scan()
+
+    def cleanup(self):
+        pass
 
     def main(self):
         """main thread"""
@@ -41,24 +61,13 @@ class WiFiServer(object):
             logging.info("Main Thread Stable (startup complete)")
             while self.shutdown is False:
                 try:
-                    time.sleep(15)
+                    time.sleep(1)
                     logging.debug('Main loop')
                     print 'Performing Network Scan'
-                    self.get_networks()
-                    print self.networks
-                    if self.svc.apmode:
-                        if not self.svc.ap_active:
-                            self.ap.startap()
-                        else:
-                            logging.debug("WiFi AP already active")
-                    #self.set_threadstatus("MAIN", "LOOP")
-                    ## do stuff
                 except KeyboardInterrupt:
                     self.keyboardinterrupt()
-            # self.set_threadstatus("MAIN", "CLEANUP")
-            # self._status['status'] = 'cleanup'
             logging.info("Begin Shutdown Sequeuence")
-            #self.cleanup()
+            self.cleanup()
             logging.info("WiFiServer is Shutdown")
         except Exception as e:
             logging.critical("Error in Main loop: {0}".format(e))
