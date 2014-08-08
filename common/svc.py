@@ -1,4 +1,6 @@
 import logging
+import ConfigParser
+import StringIO
 
 
 class WiFiObj(object):
@@ -18,5 +20,16 @@ class SVC(object):
         self.ap_active = False
         self.client_mode = False
 
-    def scan(self):
-        return
+
+class MyConfigParser(ConfigParser.ConfigParser):
+    """
+    Subclassed Configparser since Hostapd doesn't like INI sections...
+    """
+    def read(self, filename):
+        try:
+            text = open(filename).read()
+        except IOError:
+            pass
+        else:
+            file = StringIO.StringIO("[hostapd]\n" + text)
+            self.readfp(file, filename)
