@@ -14,6 +14,7 @@ class WiFiAP(WiFiObj):
     def __init__(self):
         self.interface = 'wlan0'
         self.dhcp = ManageDHCP()
+        self.update_cfg
 
     # def run(self):
     #     while self.svc.apmode is True:
@@ -47,3 +48,20 @@ class WiFiAP(WiFiObj):
             os.system('sudo ifconfig {} down'.format(self.interface))
             os.system('sudo ifconfig {} up'.format(self.interface))
             self.svc.ap_active = False
+
+    def update_cfg(self):
+        apcfg = """interface=wlan0
+                driver=nl80211
+                ssid=wifi_server
+                hw_mode=g
+                channel=6
+                macaddr_acl=0
+                auth_algs=1
+                ignore_broadcast_ssid=0
+                wpa=3
+                wpa_passphrase=wifi_server
+                wpa_key_mgmt=WPA-PSK
+                wpa_pairwise=TKIP
+                rsn_pairwise=CCMP"""
+        with file('/etc/hostapd.conf', mode='w+') as cfg:
+            cfg.write(apcfg)
