@@ -31,6 +31,7 @@ class WifiClient(object):
         cell = self.networks[data['network']]
         scheme = Scheme.for_cell(self.interface, data['name'], cell, data['passkey'])
         scheme.activate()
+        return {'join': 'successful'}  # FIXME: return something more meaningful
 
     def add_network(self, data):
         """add a new network config"""
