@@ -72,6 +72,12 @@ class WiFiServer(object):
                 try:
                     time.sleep(1)
                     logging.debug('Main loop')
+                    if self.svc.apmode and not self.svc.ap_active:
+                        logging.info("Starting WiFiAP")
+                        self.ap.startap()
+                    elif not self.svc.apmode and self.svc.ap_active:
+                        logging.info("Stopping WiFiAP")
+                        self.ap.stopap()
                 except KeyboardInterrupt:
                     self.keyboardinterrupt()
             logging.info("Begin Shutdown Sequeuence")
