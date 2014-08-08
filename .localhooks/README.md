@@ -1,1 +1,0 @@
-Don't mess with the commit hooks without prior approval.
