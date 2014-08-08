@@ -45,9 +45,8 @@ class WS(threading.Thread):
             result = self.wifiserver.add_network(data)
             return jsondump(result)
 
-
-    while True:
-        try:
-            run(host='0.0.0.0', port=8080, quiet=True)
-        except Exception:
-            logging.critical("exception in webservice", exc_info=1)
+        while True:
+            try:
+                run(host='0.0.0.0', port=8080, quiet=True)
+            except Exception:
+                logging.critical("exception in webservice", exc_info=1)
