@@ -19,7 +19,7 @@ class WiFiServer(object):
         self.networks = []
 
     def setup_logging(self):
-        """Setup Logging"""
+        """Setup Logging"""  # FIXME: logging is not happy, also we need a log file
         logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
         logging.StreamHandler(sys.stdout)
 
@@ -48,6 +48,7 @@ class WiFiServer(object):
         return result
 
     def cleanup(self):
+        """on shutdown, we may need to clean some stuff up"""
         pass
 
     def start_ws(self):
@@ -61,6 +62,7 @@ class WiFiServer(object):
         logging.info("KeyboardInterrupt Called, Shutting down application")
 
     def start(self):
+        """called from the run.py file, this starts each thread, then the main"""
         self.start_ws()
         self.main()
 
