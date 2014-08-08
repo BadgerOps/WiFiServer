@@ -27,18 +27,41 @@ class WifiClient(object):
         '''
         return self.dict_networks(self.get_networks())
 
+    def join_network(self, data):
+        cell = self.networks[data['network']]
+        scheme = Scheme.for_cell(self.interface, data['name'], cell, data['passkey'])
+        scheme.activate()
+
     def add_network(self, data):
         """add a new network config"""
+        if self.verify_network(data['name']):
+            self.join_network(data)
+        else:
+            logging.warn("sorry, I cant see that network to add it")
+
+    def save_network(self, data):
         pass
+
+    def verify_network(self, name):
+        """check to make sure we know about the network"""
+        if name in self.networks:
+            return True
+        else:  # try one more time
+            self.networks = self.get_networks()
+            if name in self.networks:
+                return True
+            else:
+                return False
 
     def get_networks(self):
         '''get a list of networks...'''
         return Cell.all(self.interface)
 
     def dict_networks(self, network_list):
-        '''build a dictionary object out of network information
+        """
+        build a dictionary object out of network information
         :rtype : dictionary
-        '''
+        """
         ap = {}
         nw = {}
         for item in network_list:
