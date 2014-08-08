@@ -36,6 +36,7 @@ class WiFiServer(object):
 
     def stop_ap(self):
         """stop the AP"""
+        pass
 
     def get_networks(self):
         wificlient = common.WifiClient()
