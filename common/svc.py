@@ -23,7 +23,7 @@ class SVC(object):
 
 class MyConfigParser(ConfigParser.ConfigParser):
     """
-    Subclassed Configparser since Hostapd doesn't like INI sections...
+    Subclassed Configparser and overrode the read method, since Hostapd doesn't like INI sections...
     """
     def read(self, filename):
         try:
