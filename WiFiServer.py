@@ -24,7 +24,7 @@ class WiFiServer(object):
         logging.StreamHandler(sys.stdout)
 
     def start_ap(self):
-        """star the ap if we're in ap mode"""
+        """start the ap if we're in ap mode"""
         if self.svc.apmode:
             logging.info("starting AP")
             if not self.svc.ap_active:
@@ -72,12 +72,8 @@ class WiFiServer(object):
                 try:
                     time.sleep(1)
                     logging.debug('Main loop')
-                    if self.svc.apmode and not self.svc.ap_active:
-                        logging.info("Starting WiFiAP")
-                        self.ap.startap()
-                    elif not self.svc.apmode and self.svc.ap_active:
-                        logging.info("Stopping WiFiAP")
-                        self.ap.stopap()
+                    if self.svc.apmode:
+                        self.start_ap()
                 except KeyboardInterrupt:
                     self.keyboardinterrupt()
             logging.info("Begin Shutdown Sequeuence")
