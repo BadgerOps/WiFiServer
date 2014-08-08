@@ -4,6 +4,9 @@ import os
 
 class ManageDHCP(object):
     def __init__(self):
+        pass
+
+    def setup_config(self):
         self.update_cfg()
 
     def start(self):

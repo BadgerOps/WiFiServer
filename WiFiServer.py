@@ -52,6 +52,12 @@ class WiFiServer(object):
         wificlient = common.WifiClient()
         self.networks = wificlient.scan()
 
+    def add_network(self, data):
+        """add new network config information"""
+        wificlient = common.WifiClient()
+        result = wificlient.add_network(data)
+        return result
+
     def cleanup(self):
         pass
 
@@ -63,7 +69,6 @@ class WiFiServer(object):
                 try:
                     time.sleep(1)
                     logging.debug('Main loop')
-                    print 'Performing Network Scan'
                 except KeyboardInterrupt:
                     self.keyboardinterrupt()
             logging.info("Begin Shutdown Sequeuence")

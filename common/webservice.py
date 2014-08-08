@@ -5,7 +5,8 @@
 
 import threading
 import logging
-from bottle import route, run, get
+from bottle import route, run, get, post, request, response, error, HTTPError
+import json
 from common import jsondump, json_handler
 
 
@@ -31,6 +32,19 @@ class WS(threading.Thread):
         @get('/list')
         def list():
             return self.wifiserver.networks
+
+        @get('/scan')
+        def scan():
+            self.wifiserver.get_networks()
+            return self.wifiserver.networks
+
+        @post('/add_network')
+        def add_network():
+            data = request.json
+            response.content_type = 'application/json'
+            result = self.wifiserver.add_network(data)
+            return jsondump(result)
+
 
     while True:
         try:

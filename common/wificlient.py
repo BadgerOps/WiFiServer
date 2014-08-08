@@ -27,6 +27,10 @@ class WifiClient(object):
         '''
         return self.dict_networks(self.get_networks())
 
+    def add_network(self, data):
+        """add a new network config"""
+        pass
+
     def get_networks(self):
         '''get a list of networks...'''
         return Cell.all(self.interface)
