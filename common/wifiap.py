@@ -2,19 +2,30 @@
 
 import os
 import logging
+import threading
 from common.svc import WiFiObj, MyConfigParser
 from managedhcp import ManageDHCP
 
 
-class WiFiAP(WiFiObj):
+class WiFiAP(threading.Thread):
     """
     Allows creation and management of WiFi AP on compatible wireless cards
     Requires hostapd, dnsmasq
     """
-    def __init__(self):
+    def __init__(self, wifiserver):
         self.interface = None
+        self.wifiserver = wifiserver
         self.get_cfg()
         self.dhcp = ManageDHCP()
+        threading.Thread.__init__(self)
+
+    def run(self):
+        while self.wifiserver.svc.apmode is True:
+            if not self.wifiserver.svc.ap_active:
+                self.startap()
+            else:
+                logging.debug("AP already active")
+        self.stopap()
 
     def startap(self):
         logging.info("Starting WiFi AP")
@@ -27,10 +38,10 @@ class WiFiAP(WiFiObj):
             logging.warning('Unable to prepare WiFi AP interface: {}'.format(e))
         try:
             os.system('sudo service hostapd start')
-            self.svc.ap_active = True
+            self.wifiserver.svc.ap_active = True
         except Exception as e:
             logging.critical("Unable to start WiFi AP: {}".format(e))
-            self.svc.ap_active = False
+            self.wifiserver.svc.ap_active = False
 
     def stopap(self):
         logging.info("Stopping WiFi AP")
@@ -42,7 +53,7 @@ class WiFiAP(WiFiObj):
         finally:
             os.system('sudo ifconfig {} down'.format(self.interface))
             os.system('sudo ifconfig {} up'.format(self.interface))
-            self.svc.ap_active = False
+            self.wifiserver.svc.ap_active = False
 
     def get_cfg(self):
         cfg = MyConfigParser()

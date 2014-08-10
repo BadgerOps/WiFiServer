@@ -13,30 +13,15 @@ class WiFiServer(object):
     def __init__(self, cfg=None):
         self.svc = common.SVC()
         common.WiFiObj.svc = self.svc
-        self.ap = common.WiFiAP()
+        self.ap = common.WiFiAP(self)
         self.setup_logging()
         self.shutdown = False
         self.networks = []
 
     def setup_logging(self):
-        """Setup Logging"""  # FIXME: logging is not happy, also we need a log file
-        logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+        """Setup Logging"""
+        logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
         logging.StreamHandler(sys.stdout)
-
-    def start_ap(self):
-        """start the ap if we're in ap mode"""
-        if self.svc.apmode:
-            logging.info("starting AP")
-            if not self.svc.ap_active:
-                self.ap.startap()
-            else:
-                logging.debug("WiFi AP already active")
-        else:
-            logging.info("this shouldn't get hit, no reason to start the AP")
-
-    def stop_ap(self):
-        """stop the AP"""
-        pass
 
     def get_networks(self):
         wificlient = common.WifiClient()
@@ -65,6 +50,7 @@ class WiFiServer(object):
     def start(self):
         """called from the run.py file, this starts each thread, then the main"""
         self.start_ws()
+        self.ap.run()
         self.main()
 
     def main(self):
@@ -75,8 +61,6 @@ class WiFiServer(object):
                 try:
                     time.sleep(1)
                     logging.debug('Main loop')
-                    if self.svc.apmode:
-                        self.start_ap()
                 except KeyboardInterrupt:
                     self.keyboardinterrupt()
             logging.info("Begin Shutdown Sequeuence")
