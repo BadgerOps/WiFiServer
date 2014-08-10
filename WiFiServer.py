@@ -38,8 +38,8 @@ class WiFiServer(object):
         """on shutdown, we may need to clean some stuff up"""
         logging.info("Cleaning Up")
         self.ap.stopap()
-        self.ap.join()
-        self.ws.join()
+        self.ap.join(timeout=10)
+        self.ws.join(timeout=10)
 
     def start_ap(self):
         """
@@ -72,11 +72,11 @@ class WiFiServer(object):
             logging.info("Main Thread Stable (startup complete)")
             while self.shutdown is False:
                 try:
-                    time.sleep(60)
                     logging.debug('Main loop')
+                    time.sleep(30)
                 except KeyboardInterrupt:
                     self.keyboardinterrupt()
-            logging.info("Begin Shutdown Sequeuence")
+            logging.info("Begin Shutdown Sequence")
             self.cleanup()
             logging.info("WiFiServer is Shutdown")
         except Exception as e:
