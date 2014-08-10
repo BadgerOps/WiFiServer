@@ -48,7 +48,6 @@ class WS(threading.Thread):
         @get('/shutdown/please')
         def shutdown():
             self.wifiserver.shutdown = True
-            self.wifiserver.cleanup()
             return "Shutting Down"
 
         while True:

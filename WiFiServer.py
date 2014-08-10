@@ -46,7 +46,6 @@ class WiFiServer(object):
 
     def keyboardinterrupt(self):
         self.shutdown = True
-        self.cleanup()
         logging.info("KeyboardInterrupt called, cleaning up and shutting down application")
 
     def start(self):
