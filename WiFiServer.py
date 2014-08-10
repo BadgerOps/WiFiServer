@@ -48,7 +48,7 @@ class WiFiServer(object):
         """
         self.ap = common.WiFiAP(self)
         self.ap.setDaemon(True)
-        self.ap.run()
+        self.ap.start()
 
     def start_ws(self):
         """Start the web service"""
