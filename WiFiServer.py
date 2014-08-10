@@ -14,6 +14,7 @@ class WiFiServer(object):
         self.svc = common.SVC()
         common.WiFiObj.svc = self.svc
         self.ap = common.WiFiAP(self)
+        self.ws = None
         self.setup_logging()
         self.shutdown = False
         self.networks = []
@@ -37,12 +38,14 @@ class WiFiServer(object):
         """on shutdown, we may need to clean some stuff up"""
         logging.info("Cleaning Up")
         self.ap.stopap()
+        self.ap.join()
+        self.ws.join()
 
     def start_ws(self):
         """Start the web service"""
-        ws = common.WS(self)
-        ws.setDaemon(True)
-        ws.start()
+        self.ws = common.WS(self)
+        self.ws.setDaemon(True)
+        self.ws.start()
 
     def keyboardinterrupt(self):
         self.shutdown = True
