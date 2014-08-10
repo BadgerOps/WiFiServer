@@ -3,6 +3,7 @@
 import os
 import logging
 import threading
+from time import sleep
 from common.svc import WiFiObj, MyConfigParser
 from managedhcp import ManageDHCP
 
@@ -25,6 +26,7 @@ class WiFiAP(threading.Thread):
                 self.startap()
             else:
                 logging.debug("AP already active")
+                sleep(15)
         self.stopap()
 
     def startap(self):
