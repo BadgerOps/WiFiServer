@@ -40,6 +40,8 @@ class WiFiAP(threading.Thread):
             logging.warning('Unable to prepare WiFi AP interface: {}'.format(e))
         try:
             os.system('sudo service hostapd start')
+            sleep(5)
+            logging.info("WiFi AP Stable")
             self.wifiserver.svc.ap_active = True
         except Exception as e:
             logging.critical("Unable to start WiFi AP: {}".format(e))
