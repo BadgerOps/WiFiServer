@@ -21,13 +21,15 @@ class WiFiAP(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        while self.wifiserver.svc.apmode is True:
-            if not self.wifiserver.svc.ap_active:
-                self.startap()
+        while not self.wifiserver.shutdown:
+            if self.wifiserver.svc.apmode:
+                if not self.wifiserver.svc.ap_active:
+                    self.startap()
+                else:
+                    logging.debug("AP already active")
+                    sleep(60)
             else:
-                logging.debug("AP already active")
-                sleep(15)
-        self.stopap()
+                self.stopap()
 
     def startap(self):
         logging.info("Starting WiFi AP")
