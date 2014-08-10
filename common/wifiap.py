@@ -41,7 +41,7 @@ class WiFiAP(threading.Thread):
         except Exception as e:
             logging.warning('Unable to prepare WiFi AP interface: {}'.format(e))
         try:
-            os.system('sudo hostapd -d /etc/hostapd/hostapd.conf')
+            os.system('sudo hostapd /etc/hostapd/hostapd.conf')
             sleep(5)
             logging.info("WiFi AP Stable")
             self.wifiserver.svc.ap_active = True
