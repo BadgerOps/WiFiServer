@@ -35,7 +35,7 @@ class WiFiServer(object):
 
     def cleanup(self):
         """on shutdown, we may need to clean some stuff up"""
-        pass
+        self.ap.stopap()
 
     def start_ws(self):
         """Start the web service"""
@@ -45,7 +45,8 @@ class WiFiServer(object):
 
     def keyboardinterrupt(self):
         self.shutdown = True
-        logging.info("KeyboardInterrupt Called, Shutting down application")
+        self.cleanup()
+        logging.info("KeyboardInterrupt called, cleaning up and shutting down application")
 
     def start(self):
         """called from the run.py file, this starts each thread, then the main"""

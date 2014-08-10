@@ -14,7 +14,7 @@ class WiFiAP(threading.Thread):
     Requires hostapd, dnsmasq
     """
     def __init__(self, wifiserver):
-        self.interface = None
+        self.interface = 'wlan0'
         self.wifiserver = wifiserver
         self.get_cfg()
         self.dhcp = ManageDHCP()
@@ -36,6 +36,8 @@ class WiFiAP(threading.Thread):
             os.system('sudo ifconfig {} down'.format(self.interface))
             os.system('sudo rfkill unblock all')  # Remove possible WLAN block
             os.system('sudo ifconfig {} 10.0.0.1/24 up'.format(self.interface))
+            sleep(5)
+            logging.debug("Successfully prepared interface")
         except Exception as e:
             logging.warning('Unable to prepare WiFi AP interface: {}'.format(e))
         try:
