@@ -13,7 +13,7 @@ class WiFiServer(object):
     def __init__(self, cfg=None):
         self.svc = common.SVC()
         common.WiFiObj.svc = self.svc
-        self.ap = common.WiFiAP(self)
+        self.ap = None
         self.ws = None
         self.setup_logging()
         self.shutdown = False
@@ -41,6 +41,15 @@ class WiFiServer(object):
         self.ap.join()
         self.ws.join()
 
+    def start_ap(self):
+        """
+        Start up AP
+        :return: None
+        """
+        self.ap = common.WiFiAP(self)
+        self.ap.setDaemon(True)
+        self.ap.run()
+
     def start_ws(self):
         """Start the web service"""
         self.ws = common.WS(self)
@@ -54,7 +63,7 @@ class WiFiServer(object):
     def start(self):
         """called from the run.py file, this starts each thread, then the main"""
         self.start_ws()
-        self.ap.run()
+        self.start_ap()
         self.main()
 
     def main(self):
