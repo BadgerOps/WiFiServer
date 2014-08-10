@@ -45,6 +45,11 @@ class WS(threading.Thread):
             result = self.wifiserver.add_network(data)
             return jsondump(result)
 
+        @get('/shutdown/please')
+        def shutdown():
+            self.wifiserver.shutdown = True
+            self.wifiserver.cleanup()
+
         while True:
             try:
                 run(host='0.0.0.0', port=8080, quiet=True)

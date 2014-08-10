@@ -35,6 +35,7 @@ class WiFiServer(object):
 
     def cleanup(self):
         """on shutdown, we may need to clean some stuff up"""
+        logging.info("Cleaning Up")
         self.ap.stopap()
 
     def start_ws(self):
