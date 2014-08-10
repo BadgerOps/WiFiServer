@@ -63,7 +63,7 @@ class WiFiServer(object):
     def start(self):
         """called from the run.py file, this starts each thread, then the main"""
         self.start_ws()
-        self.start_ap()
+        #self.start_ap()
         self.main()
 
     def main(self):
@@ -71,9 +71,9 @@ class WiFiServer(object):
         try:
             logging.info("Main Thread Stable (startup complete)")
             while self.shutdown is False:
+                logging.info('entering main loop')
                 try:
-                    logging.debug('Main loop')
-                    time.sleep(30)
+                    time.sleep(10)
                 except KeyboardInterrupt:
                     self.keyboardinterrupt()
             logging.info("Begin Shutdown Sequence")
