@@ -72,7 +72,7 @@ class WiFiServer(object):
             logging.info("Main Thread Stable (startup complete)")
             while self.shutdown is False:
                 try:
-                    time.sleep(1)
+                    time.sleep(60)
                     logging.debug('Main loop')
                 except KeyboardInterrupt:
                     self.keyboardinterrupt()
