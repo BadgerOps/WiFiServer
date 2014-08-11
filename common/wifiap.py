@@ -14,7 +14,7 @@ class WiFiAP(threading.Thread):
     Requires hostapd, dnsmasq
     """
     def __init__(self, wifiserver):
-        self.interface = 'wlan0'
+        self.interface = None
         self.wifiserver = wifiserver
         self.get_cfg()
         self.dhcp = ManageDHCP()
@@ -62,6 +62,6 @@ class WiFiAP(threading.Thread):
             self.wifiserver.svc.ap_active = False
 
     def get_cfg(self):
-        cfg = MyConfigParser()
-        cfg.read("/etc/hostapd/hostapd.conf")
-        self.interface = cfg.get("hostapd", "interface")
+        with MyConfigParser() as cfg:
+            cfg.read("../conf/hostapd.conf")
+            self.interface = cfg.get("hostapd", "interface")
