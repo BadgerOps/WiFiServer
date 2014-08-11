@@ -27,7 +27,8 @@ class MyConfigParser(ConfigParser.ConfigParser):
     """
     def read(self, filename):
         try:
-            text = open(filename).read()
+            with open(filename) as cfgfile:
+                text = cfgfile.read()
         except IOError:
             pass
         else:
