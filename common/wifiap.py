@@ -62,6 +62,6 @@ class WiFiAP(threading.Thread):
             self.wifiserver.svc.ap_active = False
 
     def get_cfg(self):
-        with MyConfigParser() as cfg:
-            cfg.read("../conf/hostapd.conf")
-            self.interface = cfg.get("hostapd", "interface")
+        cfg = MyConfigParser()
+        cfg.read("../conf/hostapd.conf")
+        self.interface = cfg.get("hostapd", "interface")
