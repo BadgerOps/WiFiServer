@@ -63,7 +63,7 @@ class WiFiServer(object):
     def start(self):
         """called from the run.py file, this starts each thread, then the main"""
         self.start_ws()
-        #self.start_ap()
+        self.start_ap()
         self.main()
 
     def main(self):

@@ -63,5 +63,5 @@ class WiFiAP(threading.Thread):
 
     def get_cfg(self):
         cfg = MyConfigParser()
-        cfg.read("../conf/hostapd.conf")
+        cfg.read("/etc/hostapd/hostapd.conf")
         self.interface = cfg.get("hostapd", "interface")
