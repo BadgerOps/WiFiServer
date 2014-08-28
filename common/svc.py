@@ -32,5 +32,5 @@ class MyConfigParser(ConfigParser.ConfigParser):
         except IOError:
             pass
         else:
-            file = StringIO.StringIO("[hostapd]\n" + text)
-            self.readfp(file, filename)
+            f = StringIO.StringIO("[hostapd]\n" + text)
+            self.readfp(f, filename)
