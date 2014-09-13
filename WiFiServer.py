@@ -8,9 +8,9 @@ import common
 
 class WiFiServer(object):
     """
-    Master process for WiFi service
+    Main thread for WiFi service
     """
-    def __init__(self, cfg=None):
+    def __init__(self):
         self.svc = common.SVC()
         common.WiFiObj.svc = self.svc
         self.ap = None
@@ -22,9 +22,14 @@ class WiFiServer(object):
     def setup_logging(self):
         """Setup Logging"""
         logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
-        logging.StreamHandler(sys.stdout)
+        if self.debugging == True:  # read this from config / init
+            logging.StreamHandler(sys.stdout)
+        else:
+            handler = logging.FileHandler('/var/log/wifiserver.log')
+            logging.addHandler(handler)           
 
-    def get_networks(self):
+    def get_networks(self):  # TODO: depricate
+        """get a list of networks, being depricated"""
         wificlient = common.WifiClient()
         self.networks = wificlient.scan()
 
