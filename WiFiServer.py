@@ -11,6 +11,7 @@ class WiFiServer(object):
     Main thread for WiFi service
     """
     def __init__(self):
+        self.debugging = True
         self.svc = common.SVC()
         common.WiFiObj.svc = self.svc
         self.ap = None
@@ -18,6 +19,7 @@ class WiFiServer(object):
         self.setup_logging()
         self.shutdown = False
         self.networks = []
+        
 
     def setup_logging(self):
         """Setup Logging"""

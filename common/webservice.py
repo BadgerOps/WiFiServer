@@ -7,7 +7,6 @@ import threading
 import logging
 from bottle import route, run, get, post, request, response, error, HTTPError
 import json
-from common import jsondump, json_handler
 
 
 class WS(threading.Thread):
@@ -43,7 +42,7 @@ class WS(threading.Thread):
             data = request.json
             response.content_type = 'application/json'
             result = self.wifiserver.add_network(data)
-            return jsondump(result)
+            return json.dumps(result)
 
         @get('/shutdown/please')
         def shutdown():
