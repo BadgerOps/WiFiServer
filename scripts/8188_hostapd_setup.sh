@@ -19,7 +19,7 @@ fi
 
 info "Installing some necessary software"
     sudo apt-get update
-    sudo apt-get install -y git python-pip dnsmasq htop ll iw
+    sudo apt-get install -y git python-pip dnsmasq htop iw
 
 info "Stopping unecessary services"
     sudo service dnsmasq stop
