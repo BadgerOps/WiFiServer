@@ -8,7 +8,7 @@ info() {
   printf '\E[32m'; echo "$@"; printf '\E[0m'
 }
 
-BASE=$(mktemp -d setup_XXX)
+BASE=$(mktemp -d /tmp/setup_XXX)
 
 if [ $UID != 0 ] ;
     then
