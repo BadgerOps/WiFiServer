@@ -34,7 +34,7 @@ class WiFiAP(threading.Thread):
         self.dhcp.start()
         try:
             os.system('sudo ifconfig {} down'.format(self.interface))
-            os.system('sudo rfkill unblock all')  # Remove possible WLAN block
+            os.system('sudo killall wpa_supplicant')
             os.system('sudo ifconfig {} 10.0.0.1/24 up'.format(self.interface))
             sleep(5)
             logging.debug("Successfully prepared interface")
