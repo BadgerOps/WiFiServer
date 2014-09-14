@@ -40,8 +40,12 @@ info "Ensuring Hostapd is not running"
     sudo service hostapd stop
 
 info "Getting WiFiServer & dependencies"
+    sudo mkdir /opt/wifiserver
+    cd /opt/wifiserver
     git clone https://github.com/Badger32d/WiFiServer.git
     cd WiFiServer
     sudo pip install -r requirements.txt
+    sudo cp conf/hostapd.conf /etc/hostapd/hostapd.conf
+    sudo cp conf/dnsmasq.conf /etc/dnsmasq.conf
 
-error "You should now edit the /etc/hostapd/hostapd.conf and /etc/dnsmasq.conf files!"
+error "Setup Complete"
