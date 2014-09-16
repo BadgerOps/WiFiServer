@@ -12,7 +12,8 @@ from time import sleep
 
 class WifiClient(object):
 
-    def __init__(self):
+    def __init__(self, wifiserver):
+        self.wifiserver = wifiserver
         self.networks = []
         #self._setup()
         self.interface = 'wlan0'  # TODO: move this to cfg
@@ -28,7 +29,7 @@ class WifiClient(object):
         return self.dict_networks(self.get_networks())
 
     def join_network(self, data):
-        cell = self.networks[data['network']]
+        cell = [x for x in self.networks if x.ssid == data['name']][0]
         scheme = Scheme.for_cell(self.interface, data['name'], cell, data['passkey'])
         scheme.activate()
         return {'join': 'successful'}  # FIXME: return something more meaningful
@@ -45,11 +46,11 @@ class WifiClient(object):
 
     def verify_network(self, name):
         """check to make sure we know about the network"""
-        if name in self.networks:
+        if name in [x.ssid for x in self.networks]:
             return True
         else:  # try one more time
             self.networks = self.get_networks()
-            if name in self.networks:
+            if name in [x.ssid for x in self.networks]:
                 return True
             else:
                 return False

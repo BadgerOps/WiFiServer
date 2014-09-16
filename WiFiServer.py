@@ -19,7 +19,6 @@ class WiFiServer(object):
         self.setup_logging()
         self.shutdown = False
         self.networks = []
-        
 
     def setup_logging(self):
         """Setup Logging"""
@@ -28,11 +27,11 @@ class WiFiServer(object):
             logging.StreamHandler(sys.stdout)
         else:
             handler = logging.FileHandler('/var/log/wifiserver.log')
-            logging.addHandler(handler)           
+            logging.addHandler(handler)
 
     def get_networks(self):  # TODO: depricate
         """get a list of networks, being depricated"""
-        wificlient = common.WifiClient()
+        wificlient = common.WifiClient(self)
         self.networks = wificlient.scan()
 
     def add_network(self, data):
