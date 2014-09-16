@@ -31,6 +31,8 @@ class WifiClient(object):
     def join_network(self, data):
         cell = [x for x in self.networks if x.ssid == data['name']][0]
         scheme = Scheme.for_cell(self.interface, data['name'], cell, data['passkey'])
+        self.wifiserver.svc.apmode = False
+        sleep(10)
         scheme.activate()
         return {'join': 'successful'}  # FIXME: return something more meaningful
 
