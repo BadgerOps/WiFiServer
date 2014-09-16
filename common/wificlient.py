@@ -30,8 +30,12 @@ class WifiClient(object):
     def join_network(self, data):
         cell = [x for x in self.networks if x.ssid == data['name']][0]
         scheme = Scheme.for_cell(self.interface, data['name'], cell, data['passkey'])
+        scheme.save()
         self.wifiserver.svc.apmode = False
-        sleep(10)
+        while self.wifiserver.svc.ap_active:
+            logging.debug("Waiting for AP to shut down")
+            sleep(1)
+        logging.debug("Activating Wireless connection")
         scheme.activate()
         return {'join': 'successful'}  # FIXME: return something more meaningful
 
@@ -58,7 +62,12 @@ class WifiClient(object):
 
     def get_networks(self):
         '''get a list of networks...'''
-        return Cell.all(self.interface)
+        networks = Cell.all(self.interface)
+        if networks:
+            return networks
+        else:
+            logging.warn("Unable to find networks - Interface {}".format(self.interface))
+            return []
 
     def dict_networks(self, network_list):
         """
