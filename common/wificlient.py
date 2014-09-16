@@ -11,7 +11,6 @@ from time import sleep
 
 
 class WifiClient(object):
-
     def __init__(self, wifiserver):
         self.wifiserver = wifiserver
         self.networks = []

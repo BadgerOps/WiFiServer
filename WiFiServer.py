@@ -36,7 +36,7 @@ class WiFiServer(object):
 
     def add_network(self, data):
         """add new network config information"""
-        wificlient = common.WifiClient()
+        wificlient = common.WifiClient(self)
         result = wificlient.add_network(data)
         return result
 
