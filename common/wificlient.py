@@ -64,8 +64,8 @@ class WifiClient(object):
         :rtype : dictionary
         """
         ap = {}
-        nw = {}
         for item in network_list:
+            nw = {}
             nw['network'] = item.ssid
             nw['encrypted'] = item.encrypted
             nw['encryption'] = item.encryption_type
