@@ -29,14 +29,13 @@ class WifiClient(object):
 
     def join_network(self, data):
         cell = [x for x in self.networks if x.ssid == data['name']][0]
-        scheme = Scheme.for_cell(self.interface, data['name'], cell, data['passkey'])
-        scheme.save()
+        conn = Scheme.for_cell(self.interface, data['name'], cell, data['passkey'])
         self.wifiserver.svc.apmode = False
         while self.wifiserver.svc.ap_active:
             logging.debug("Waiting for AP to shut down")
             sleep(1)
         logging.debug("Activating Wireless connection")
-        scheme.activate()
+        conn.activate()
         return {'join': 'successful'}  # FIXME: return something more meaningful
 
     def add_network(self, data):
