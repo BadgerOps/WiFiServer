@@ -10,7 +10,7 @@ except Exception:
 class RpiHW(object):
 
     def __init__(self):
-         self.gpio_pin = 26  # FIXME: this shouldn't be here, move to cfg
+        self.gpio_pin = 26  # FIXME: this shouldn't be here, move to cfg
 
     def _setup(self):
         gpio.setmode(gpio.BOARD)
