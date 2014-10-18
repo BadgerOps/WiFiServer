@@ -18,6 +18,9 @@ class WifiClient(object):
         self.interface = 'wlan0'  # TODO: move this to cfg
 
     def _setup(self):
+        """
+        set up initial configuration
+        """
         pass
 
     def scan(self):
@@ -43,10 +46,13 @@ class WifiClient(object):
         if self.verify_network(data['name']):
             self.join_network(data)
         else:
-            logging.warn("sorry, I cant see that network to add it")
+            logging.warn("sorry, I can't see that network to add it")
 
     def save_network(self, data):
-        pass
+        cell = [x for x in self.networks if x.ssid == data['name']][0]
+        conn = Scheme.for_cell(self.interface, data['name'], cell, data['passkey'])
+        conn.save()
+        logging.info('saved network {}'.format(data['name']))
 
     def verify_network(self, name):
         """check to make sure we know about the network"""

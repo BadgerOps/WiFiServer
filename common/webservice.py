@@ -51,6 +51,6 @@ class WS(threading.Thread):
 
         while True:
             try:
-                run(host='0.0.0.0', port=8080, quiet=True)
+                run(host='0.0.0.0', port=8080, quiet=True) #  TODO: set port in config
             except Exception:
                 logging.critical("exception in webservice", exc_info=1)

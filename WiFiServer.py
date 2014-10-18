@@ -68,6 +68,7 @@ class WiFiServer(object):
 
     def start(self):
         """called from the run.py file, this starts each thread, then the main"""
+        #  TODO: determine whether or not to start WS or AP based on setting
         self.start_ws()
         self.start_ap()
         self.main()
