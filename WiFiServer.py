@@ -11,7 +11,7 @@ class WiFiServer(object):
     Main thread for WiFi service
     """
     def __init__(self):
-        self.debugging = True
+        self.debugging = True  # TODO: remove this before packaging
         self.svc = common.SVC()
         common.WiFiObj.svc = self.svc
         self.ap = None
@@ -72,7 +72,21 @@ class WiFiServer(object):
         self.start_ws()
         self.start_ap()
         self.main()
-
+        
+    def check_jumper(self):
+        """if we're on a raspberry pi, we check to see if the
+        jumper is on or off, AP mode or Client mode"""
+        if common.RpiHW.gpio_check:
+            self.svc.client_mode = False
+            self.svc.apmode = True
+        elif not common.RpiHW.gpio_check:
+            self.svc.apmode = False
+            self.svc.client_mode = True
+            
+    def check_mode(self):
+        """check which mode we're in, set up / tear down accordingly"""
+        pass
+    
     def main(self):
         """main thread"""
         try:

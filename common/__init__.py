@@ -3,3 +3,4 @@ from wificlient import WifiClient
 from managedhcp import ManageDHCP
 from svc import WiFiObj, SVC
 from webservice import WS
+from rpi_hw import RpiHW

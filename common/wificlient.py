@@ -49,6 +49,7 @@ class WifiClient(object):
             logging.warn("sorry, I can't see that network to add it")
 
     def save_network(self, data):
+        """save network to config file"""
         cell = [x for x in self.networks if x.ssid == data['name']][0]
         conn = Scheme.for_cell(self.interface, data['name'], cell, data['passkey'])
         conn.save()
