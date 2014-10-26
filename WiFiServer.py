@@ -11,6 +11,7 @@ class WiFiServer(object):
     Main thread for WiFi service
     """
     def __init__(self):
+        self.rpi = False  # TODO: do this programmatically
         self.debugging = True  # TODO: remove this before packaging
         self.svc = common.SVC()
         common.WiFiObj.svc = self.svc
@@ -39,7 +40,11 @@ class WiFiServer(object):
         wificlient = common.WifiClient(self)
         result = wificlient.add_network(data)
         return result
-
+    
+    def join_network():
+        """on startup, try to join a saved network"""
+        pass
+    
     def cleanup(self):
         """on shutdown, we may need to clean some stuff up"""
         logging.info("Cleaning Up")
@@ -68,9 +73,13 @@ class WiFiServer(object):
 
     def start(self):
         """called from the run.py file, this starts each thread, then the main"""
-        #  TODO: determine whether or not to start WS or AP based on setting
+        if self.rpi:
+            self.check_jumper()
         self.start_ws()
-        self.start_ap()
+        if self.svc.apmode:
+            self.start_ap()
+        elif self.svc.client_mode:
+            self.join_network()
         self.main()
         
     def check_jumper(self):
