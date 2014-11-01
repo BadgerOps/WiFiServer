@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-import logging
+
 import sys
 import time
+from apscheduler.scheduler import Scheduler
+import logging
 import common
 
 
@@ -24,16 +26,23 @@ class WiFiServer(object):
     def setup_logging(self):
         """Setup Logging"""
         logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
-        if self.debugging == True:  # read this from config / init
+        if self.debugging:  # read this from config / init
             logging.StreamHandler(sys.stdout)
         else:
             handler = logging.FileHandler('/var/log/wifiserver.log')
             logging.addHandler(handler)
+            
+    def setup_scheduler(self):
+        """setup periodic jobs"""
+        sched = Scheduler()
+        sched.start()
+        sched.add_interval_job(self.get_networks, minutes=1)
 
     def get_networks(self):  # TODO: depricate
         """get a list of networks, being depricated"""
         wificlient = common.WifiClient(self)
         self.networks = wificlient.scan()
+        logging.debug(self.networks.keys())
 
     def add_network(self, data):
         """add new network config information"""
@@ -69,10 +78,12 @@ class WiFiServer(object):
 
     def keyboardinterrupt(self):
         self.shutdown = True
+
         logging.info("KeyboardInterrupt called, cleaning up and shutting down application")
 
     def start(self):
-        """called from the run.py file, this starts each thread, then the main"""
+        """called from the run.py file, this starts each thread, then the main"""       
+        self.setup_scheduler()
         if self.rpi:
             self.check_jumper()
         self.start_ws()
@@ -80,6 +91,8 @@ class WiFiServer(object):
             self.start_ap()
         elif self.svc.client_mode:
             self.join_network()
+        else:
+            pass
         self.main()
         
     def check_jumper(self):
@@ -101,9 +114,8 @@ class WiFiServer(object):
         try:
             logging.info("Main Thread Stable (startup complete)")
             while self.shutdown is False:
-                logging.info('entering main loop')
                 try:
-                    time.sleep(10)
+                    time.sleep(0.1)
                 except KeyboardInterrupt:
                     self.keyboardinterrupt()
             logging.info("Begin Shutdown Sequence")

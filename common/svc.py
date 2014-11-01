@@ -16,7 +16,7 @@ class SVC(object):
     """
     def __init__(self):
         self.cfg = None
-        self.apmode = True
+        self.apmode = False
         self.ap_active = False
         self.client_mode = False
 

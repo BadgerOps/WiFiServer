@@ -44,7 +44,8 @@ class WifiClient(object):
     def add_network(self, data):
         """add a new network config"""
         if self.verify_network(data['name']):
-            self.join_network(data)
+            result = self.join_network(data)
+            return result
         else:
             logging.warn("sorry, I can't see that network to add it")
 
@@ -67,14 +68,19 @@ class WifiClient(object):
                 return False
 
     def get_networks(self):
-        '''get a list of networks...'''
-        networks = Cell.all(self.interface)
-        if networks:
-            return networks
-        else:
-            logging.warn("Unable to find networks - Interface {}".format(self.interface))
-            return []
-
+        """get a list of networks
+        :rtype : wifi cell
+        """
+        try:
+            networks = Cell.all(self.interface)
+            if networks:
+                return networks
+            else:
+                logging.warn("Unable to find networks - Interface {}".format(self.interface))
+                return []
+        except Exception as e:
+            logging.warn('could not get networks: {}'.format(e))
+        
     def dict_networks(self, network_list):
         """
         build a dictionary object out of network information
