@@ -45,7 +45,7 @@ class WS(threading.Thread):
             self.wifiserver.get_networks()
             return self.wifiserver.networks
 
-        @post('/add_network')
+        @route('/add_network', method='POST')
         def add_network():
             data = request.json
             response.content_type = 'application/json'
