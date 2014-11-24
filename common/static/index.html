@@ -1,0 +1,71 @@
+<html>
+<head>
+  <link rel="stylesheet" href="/bootstrap.css">
+	<title>Wifi Server UI</title>
+</head>
+<body>
+  <div class="container">
+	  <div class="row">
+		  <div class="header">
+			  <h3>Wifi Server UI</h3>
+		  </div>
+		  <div class="panel panel-info">
+			  <div class="panel-heading">
+				  Control Panel
+			  </div>
+			  <div class="panel-body">
+				  <form class="form-horizontal" role="form">
+					  <div class="form-group">
+					    <label class="col-sm-2 control-label">SSID</label>
+					    <div class="col-sm-10">
+					      <select class="form-control" id="ssid_list">
+									<!-- Held empty until user initiates scan -->
+							  </select>
+					    </div>
+					  </div>
+					  <div class="form-group">
+					    <label for="ssid_password" class="col-sm-2 control-label">Password</label>
+					    <div class="col-sm-10">
+					      <input type="password" class="form-control" id="ssid_password" placeholder="Password">
+					    </div>
+					  </div>
+					</form>
+				  <div>
+						<button class="btn btn-success" id="connect">Connect</button>
+					</div>
+			  </div>
+		  </div>
+      <div class="panel panel-default">
+			  <div class="panel-heading">
+				  Status
+			  </div>
+			  <div class="panel-body" id="status">
+				  Not Connected
+			  </div>
+		  </div>
+	  </div>
+  </div>
+</body>
+<script type="text/javascript" src="/jquery.js"></script>
+<script>
+	$( document ).ready(function() {
+    $('#connect').click(function() {
+      $.post('/connect', { 'name': $('#ssid_list').val(), 'passkey': $('#ssid_password').val() });
+    });
+    setInterval(function() {
+			$.getJSON('/status', function ( data ) {
+			  $('#status').html( data );
+			});
+    }, 1000);
+    setInterval(function() {
+      $.getJSON('/list', function ( data ) {
+				ssid_list = '';
+	      $.each(data['ssid_list'], function ( index, ssid ) {
+	        ssid_list = ssid_list + '<option value=\"' + ssid + '\">' + ssid + '</option>'
+	      });
+	      $('#ssid_list').html(ssid_list);
+      });
+    }, 1000);
+	});
+</script>
+</html>
