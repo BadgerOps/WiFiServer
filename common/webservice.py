@@ -32,7 +32,7 @@ class WS(threading.Thread):
         def status():
             response.contenttype = 'application/json'
             return {
-                'apmode': self.wifiserver.apmode,
+                'apmode': self.wifiserver.svc.apmode,
                 }
 
         @get('/list')

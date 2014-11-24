@@ -80,7 +80,7 @@ class WifiClient(object):
                 return []
         except Exception as e:
             logging.warn('could not get networks: {}'.format(e))
-        
+
     def dict_networks(self, network_list):
         """
         build a dictionary object out of network information
