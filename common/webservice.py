@@ -5,7 +5,7 @@
 
 import threading
 import logging
-from bottle import route, run, get, post, request, response, error, HTTPError
+from bottle import route, run, get, post, request, response, error, HTTPError, static_file
 import json
 
 
@@ -26,7 +26,15 @@ class WS(threading.Thread):
         """main webserver object"""
         @route('/')
         def index():
-            return "Index should go here, readme?"
+            return static_file('index.html', 'common/static')
+
+        @route('/bootstrap.css')
+        def css():
+            return static_file('bootstrap.min.css', 'common/static')
+
+        @route('/jquery.js')
+        def js():
+            return static_file('jquery-1.11.1.min.js', 'common/static')
 
         @route('/status')
         def status():
