@@ -33,6 +33,7 @@ class WS(threading.Thread):
             response.contenttype = 'application/json'
             return {
                 'apmode': self.wifiserver.svc.apmode,
+                'connected_ssid': self.wifiserver.svc.connected_ssid,
                 }
 
         @get('/list')

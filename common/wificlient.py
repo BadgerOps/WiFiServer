@@ -39,6 +39,7 @@ class WifiClient(object):
             sleep(1)
         logging.debug("Activating Wireless connection")
         conn.activate()
+        self.svc.connected_ssid = cell.ssid
         return {'join': 'successful'}  # FIXME: return something more meaningful
 
     def add_network(self, data):

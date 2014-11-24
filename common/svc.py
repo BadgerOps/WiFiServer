@@ -19,6 +19,7 @@ class SVC(object):
         self.apmode = False
         self.ap_active = False
         self.client_mode = False
+        self.connected_ssid = None  # todo: a property would be better
 
 
 class MyConfigParser(ConfigParser.ConfigParser):
