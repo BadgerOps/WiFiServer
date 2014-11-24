@@ -28,6 +28,13 @@ class WS(threading.Thread):
         def index():
             return "Index should go here, readme?"
 
+        @route('/status')
+        def status():
+            response.contenttype = 'application/json'
+            return {
+                'apmode': self.wifiserver.apmode,
+                }
+
         @get('/list')
         def list():
             return self.wifiserver.networks
