@@ -60,7 +60,7 @@
     setInterval(function() {
       $.getJSON('/list', function ( data ) {
 				ssid_list = '';
-	      $.each(data['ssid_list'], function ( index, ssid ) {
+	      $.each(data, function ( index, ssid ) {
 	        ssid_list = ssid_list + '<option value=\"' + ssid + '\">' + ssid + '</option>'
 	      });
 	      $('#ssid_list').html(ssid_list);
