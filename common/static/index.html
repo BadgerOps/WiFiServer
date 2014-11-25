@@ -53,7 +53,13 @@
 <script>
 	$( document ).ready(function() {
     $('#connect').click(function() {
-      $.post('/add_network', { 'name': $('#ssid_list').val(), 'passkey': $('#ssid_password').val() });
+      $.ajax({
+        url: '/add_network',
+        type: 'post',
+        data: JSON.stringify({ 'name': $('#ssid_list').val(), 'passkey': $('#ssid_password').val() }),
+        headers: { 'Content-type': 'application/json' },
+        datatype: 'json'
+      });
     });
     setInterval(function() {
 			$.getJSON('/status', function ( data ) {
