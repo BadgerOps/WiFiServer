@@ -46,7 +46,7 @@ class WS(threading.Thread):
 
         @get('/list')
         def list():
-            return self.wifiserver.networks
+            return self.wifiserver.list_network()
 
         @get('/scan')
         def scan():

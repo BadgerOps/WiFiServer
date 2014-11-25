@@ -50,6 +50,10 @@ class WiFiServer(object):
         result = wificlient.add_network(data)
         return result
     
+    def list_network(self):
+        """for the ws endpoint, send a list of the network ssids"""
+        return list(self.networks.keys())
+    
     def join_network():
         """on startup, try to join a saved network"""
         pass
