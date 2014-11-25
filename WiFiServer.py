@@ -36,7 +36,7 @@ class WiFiServer(object):
         """setup periodic jobs"""
         sched = Scheduler()
         sched.start()
-        sched.add_interval_job(self.get_networks, minutes=1)
+        sched.add_interval_job(self.get_networks, seconds=5)
 
     def get_networks(self):  # TODO: depricate
         """get a list of networks, being depricated"""
@@ -52,7 +52,7 @@ class WiFiServer(object):
     
     def list_network(self):
         """for the ws endpoint, send a list of the network ssids"""
-        return list(self.networks.keys())
+        return self.networks.keys()
     
     def join_network():
         """on startup, try to join a saved network"""

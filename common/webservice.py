@@ -46,7 +46,8 @@ class WS(threading.Thread):
 
         @get('/list')
         def list():
-            return self.wifiserver.list_network()
+            response.content_type = 'application/json'
+            return json.dumps(self.wifiserver.list_network())            
 
         @get('/scan')
         def scan():
