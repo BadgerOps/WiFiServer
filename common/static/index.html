@@ -30,8 +30,11 @@
 					    </div>
 					  </div>
 					</form>
-				  <div>
+				  <div class="col-md-6">
 						<button class="btn btn-success" id="connect">Connect</button>
+					</div>
+					<div class="col-md-6">
+						<button class="btn btn-primary" id="scan">Scan for Access Points</button>
 					</div>
 			  </div>
 		  </div>
@@ -57,7 +60,7 @@
 			  $('#status').html( data );
 			});
     }, 1000);
-    setInterval(function() {
+    $('#scan').click(function() {
       $.getJSON('/list', function ( data ) {
 				ssid_list = '';
 	      $.each(data, function ( index, ssid ) {
@@ -65,7 +68,7 @@
 	      });
 	      $('#ssid_list').html(ssid_list);
       });
-    }, 1000);
+    });
 	});
 </script>
 </html>
